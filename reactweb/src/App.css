@@ -1,0 +1,40 @@
+.App {
+    background-color: #eeeeee;
+    color: #3c4858;
+}
+
+.editCard {
+    margin: 0px auto;
+}
+
+.editCardSub {
+    text-align:center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.rightIcon {
+
+    margin-left: 2px;
+
+}
+
+.centerIcon {
+
+    text-align:center;
+
+}
+
+
+body{
+
+    background-color: #eeeeee;
+    color: #3c4858;
+    margin: 0;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.5em;
+}
+
+
+
