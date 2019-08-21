@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useState } from 'react';
 // material UI
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -55,11 +55,29 @@ function TableTools(props) {
   const classes = useStyles();
   const inputClass = inputStyle();
 
+
+  const [searchText, setSearchText] = useState('');
+
   const handleCreate =  (props, action) => {
 
      props.history.push('/form/'+ action);;
   
   }
+
+  const handleSearch =  (e) =>{
+      const {rowSet,curPage,totalPage,sortDB} = props.tableSet;
+      setSearchText(e.target.value);
+      props.getList(rowSet,curPage,e.target.value,totalPage,sortDB);
+ 
+     
+  }
+
+  const handleClean = (e) =>{
+    setSearchText('');
+    props.getList(5,1,'',1,{modifyDate : -1});
+    
+}
+
 
 
   return (
@@ -87,6 +105,8 @@ function TableTools(props) {
                 input: inputClass.inputInput
               }}
               inputProps={{ "aria-label": "search" }}
+              value={searchText}
+              onChange={handleSearch}
             />
           </div>
 
@@ -98,14 +118,15 @@ function TableTools(props) {
         
               className={classes.menuButton}
               color="inherit"
-              aria-label="add user"
+              aria-label="clear"
+              onClick = {handleClean}
             >
                 <ClearIcon />
             </IconButton>
                   
           
           </Tooltip>
-          <Tooltip title="Add User" aria-label="addUser">
+          <Tooltip title="Create new user" aria-label="addUser">
             <Fab color="secondary" aria-label="edit" className={classes.menuButton} onClick={() => {handleCreate(props,'Create')} } >
               <AddIcon />
             </Fab>

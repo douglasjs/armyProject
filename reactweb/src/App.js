@@ -16,17 +16,17 @@ import {connect, Provider} from 'react-redux';
 
 //components
 import UserTable from './components/userTable';
-import Form from './components/form';
+import Form from './components/userTable/form';
 
 //redux store
-import store from './redux/store'
+import store from './components/redux/store';
 
 //redux action
-import * as searchAction from './redux/action'
+import * as searchAction from './components/redux/action';
 
 //redux State
 const mapStateToProps = (state) => {
-    console.log(state);
+  
     return {
       ...state
     }

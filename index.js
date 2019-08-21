@@ -8,8 +8,8 @@ const ejs = require('ejs');
 var path = require('path');
 
 // API Server Setting
-apiServer.use(bodyParser.urlencoded({ extended: true }));
-apiServer.use(bodyParser.json());
+apiServer.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+apiServer.use(bodyParser.json({limit: '50mb'}));
 
 // server port setting
 const port = process.env.PORT || 8888; 
@@ -26,6 +26,7 @@ apiServer.use(function(req, res, next) {
     console.log("requst url = " + req.url);
     next();
   });
+
 
 
 // MongoDB Connection

@@ -11,14 +11,13 @@ const UserSchema = new Schema({
     sex: String,
     rank: String,
     startDate: Date,
-    phoneNum: String,
+    phone: String,
     email: String,
-    superoprID: ObjectId,
-    superopr: String,
-    DS: Number,
-    subordinates: [
-        ObjectId
-    ],
+    superiorID: { type : ObjectId, default: null },
+    superior: { type : String, default: '' },
+    DS: { type : Number, default: 0 },
+    image: { type : String, default: '' },
+    subordinates: { type : Array, default: [] },
     modifyDate: { type : Date, default: Date.now }
 },  {versionKey: false});
 

@@ -5,7 +5,7 @@ const getAllStart = () =>{
     return {
 
         type: "GET_ALL_START",
-        data: [],
+        data: {},
         err: null,
         isLoading: true,
     }
@@ -24,13 +24,25 @@ const getAllSuccess = (response) =>{
 
 }
 
+const getMore = (response) =>{
+
+    return {
+
+        type: "GET_MORE",
+        data: response,
+        err: null,
+        isLoading: false,
+    }
+
+}
+
 
 
 const getAllError = (error) =>{
 
     return {
         type: "GET_ALL_ERROR",
-        data: [],
+        data: {},
         err: error,
         isLoading: false,
     }
@@ -42,7 +54,7 @@ const createAllStart = () =>{
     return {
 
         type: "CREATE_ALL_START",
-        data: [],
+        data: {},
         err: null,
         isLoading: true,
     }
@@ -66,7 +78,7 @@ const createAllError = (error) =>{
 
     return {
         type: "CREATE_ALL_ERROR",
-        data: [],
+        data: {},
         err: error,
         isLoading: false,
     }
@@ -79,7 +91,7 @@ const editAllStart = () =>{
     return {
 
         type: "EDIT_ALL_START",
-        data: [],
+        data: {},
         err: null,
         isLoading: true,
     }
@@ -104,7 +116,7 @@ const editAllError = (error) =>{
 
     return {
         type: "EDIT_ALL_ERROR",
-        data: [],
+        data: {},
         err: error,
         isLoading: false,
     }
@@ -118,7 +130,7 @@ const deleteAllStart = () =>{
     return {
 
         type: "DELETE_ALL_START",
-        data: [],
+        data: {},
         err: null,
         isLoading: true,
     }
@@ -142,27 +154,80 @@ const deleteAllError = (error) =>{
 
     return {
         type: "DELETE_ALL_ERROR",
-        data: [],
+        data: {},
         err: error,
         isLoading: false,
     }
 
 }
 
-const getDataList = (rowSet, page, serach, sortString ) =>{
 
+const setTable = (data) =>{
+
+    return {
+        type: "SET_TABLE",
+        tableSet: data
+    }
+
+}
+
+const getMoreList = (rowSet, curPage, search,totalPage,sortDB ) =>{
+
+    return (dispatch) =>{
+
+        axios({ method: 'get', url: 'http://localhost:8888/api/users', params:{pageSize: rowSet, pageNo: curPage, query: search, sort : sortDB} })
+        .then(response => {
+            dispatch(getMore(response.data));
+            dispatch(setTable({rowSet, curPage, search,totalPage,sortDB}));
+
+        })
+        .catch(err => {
+            dispatch(getAllError(err));
+        });
+
+    }
+
+}
+
+const getSuperior = ( superiorID , superiorType) =>{
+
+
+    return (dispatch) =>{
+
+        
+        dispatch(getAllStart());
+        axios({ method: 'get',  url: `http://localhost:8888/api/users/${superiorID}`,params:{ superiorType } })
+        .then(response => {
+            dispatch(getAllSuccess(response.data));
+            dispatch(setTable({rowSet: 5, curPage: 1, search: '',totalPage: 1,sortDB: {modifyDate : -1}}));
+        })
+        .catch(err => {
+            dispatch(getAllError(err));
+        });
+
+    }
+
+}
+
+
+
+const getDataList = (rowSet, curPage, search,totalPage,sortDB ) =>{
+
+ 
     return (dispatch) =>{
         
       
         dispatch(getAllStart());
-        axios({ method: 'get', url: 'http://localhost:8888/api/users', params:{pageSize: rowSet, pageNo: page, query: serach, sort : sortString} })
+        axios({ method: 'get', url: 'http://localhost:8888/api/users', params:{pageSize: rowSet, pageNo: curPage, query: search, sort : sortDB} })
             .then(response => {
-                //setTimeout(() => {
-                    dispatch(getAllSuccess(response.data));
-                //}, 1000);
-              }
-            
-            )
+          
+                dispatch(getAllSuccess(response.data));
+                if(rowSet !== 9999 ){
+                    dispatch(setTable({rowSet, curPage, search,totalPage,sortDB}));
+                }
+
+
+            })
             .catch(err => {
                 dispatch(getAllError(err));
             });
@@ -207,7 +272,9 @@ const updateData = (data, handleBack) =>{
             })
             .then((response) => {
                 dispatch(editAllSuccess(response.data));
-                handleBack();})
+                handleBack();
+
+            })
             .catch(err => {
                 dispatch(editAllError(err));
             });
@@ -216,20 +283,27 @@ const updateData = (data, handleBack) =>{
 }
 
 
-const deleteData = (data, rowSet, curPage, search, sortDB) =>{
+const deleteData = (data, rowSet, curPage, search, totalPage,sortDB) =>{
 
  
     return (dispatch) =>{
         
       
+            
             dispatch(deleteAllStart());
             
             axios
             .delete(`http://localhost:8888/api/users/${data.id}`,{ crossdomain: true })
             .then((response) => {
                         dispatch(deleteAllSuccess(response.data));
-                        dispatch(getDataList(rowSet, curPage, search, sortDB));
-                    })
+                        dispatch(setTable({rowSet, curPage, search, sortDB}));
+                        
+            })
+            .then(()=>{
+
+                dispatch(getDataList(rowSet, curPage, search ,totalPage ,sortDB));
+
+            })
             .catch(err => {
                 dispatch(deleteAllError(err));
             });
@@ -239,4 +313,4 @@ const deleteData = (data, rowSet, curPage, search, sortDB) =>{
 
 
 
-export  {getDataList,createData,deleteData, updateData};
+export  {getDataList,createData,deleteData, updateData, getMoreList,getSuperior};

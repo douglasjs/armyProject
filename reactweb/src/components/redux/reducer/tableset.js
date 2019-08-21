@@ -4,7 +4,7 @@ const initState = {
         search: '',
         curPage: 1,
         totalPage: 0,
-        sortDB: {create_date : -1}
+        sortDB: {modifyDate : -1}
     }
 };
 
