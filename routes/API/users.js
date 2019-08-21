@@ -8,32 +8,23 @@ const Users    = require('../../models/user');
 // update superior
 const updateSuperior =  async (superiorID, subordinateID, level = 0) => {
 
-
-        console.log(superiorID);
-        console.log(subordinateID);
-
         Users.find({ _id: superiorID}, (err,user) =>{
            if(err){   res.status(404).end(); console.log(err); return;};
           
-           //if(user[0]){
                 user[0].subordinates = user[0].subordinates ?   [...user[0].subordinates, subordinateID] :  [subordinateID] ;
-                
-        
 
                 if(level===0){
                     user[0].DS = parseInt(user[0].DS) + 1;
                 }
                 level++;
-
-                
-            
+     
                 user[0].save(function(err){
                     if(err){ res.status(204).end();console.log(err); return;};
                     if(user[0].superiorID){
                         updateSuperior(user[0].superiorID,subordinateID,level) ;
                     }
                 })
-            //}
+
         })
 
 }
