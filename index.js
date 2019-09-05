@@ -31,7 +31,7 @@ apiServer.use(function(req, res, next) {
 
 // MongoDB Connection
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb+srv://admin:admin_0523@cluster0-u1gvm.mongodb.net/army?retryWrites=true&w=majority', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://*:*@cluster0-u1gvm.mongodb.net/army?retryWrites=true&w=majority', { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connect fail !'));
